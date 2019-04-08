@@ -33,7 +33,11 @@ include_directories(
 add_executable(ultra_sonic src/ultra_sonic.cpp)
 add_dependencies(ultra_sonic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(ultra_sonic ${catkin_LIBRARIES} ${wiringPi_LIB})
- 
+
+add_executable(main_node src/main.cpp)
+add_dependencies(main_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(main_node ${catkin_LIBRARIES})
+
 install(PROGRAMS
 	scripts/firebase_seed.js
 	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
