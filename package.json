@@ -1,0 +1,15 @@
+{
+  "name": "white_ticket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^5.9.3",
+    "rosnodejs": "^3.0.0"
+  }
+}
