@@ -6,8 +6,12 @@ import numpy
 import pyzbar.pyzbar as pyzbar
 from std_msgs.msg import String
 
-TCP_IP = '192.168.123.13'
-TCP_PORT = 5005
+with open('/home/park/catkin_ws/src/white_ticket/scripts/tcp_setting.txt') as f:
+  TCP_IP = f.readline()[:-1]
+  TCP_PORT = int(f.readline()[:-1])
+
+#TCP_IP = 'localhost'
+#TCP_PORT = 5005
 
 def recvall(sock, count):
   buf = b''
@@ -67,4 +71,3 @@ if __name__ == '__main__':
     decode()
   except rospy.ROSInterruptException:
     pass
-
