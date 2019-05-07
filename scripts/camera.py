@@ -2,13 +2,14 @@ import socket
 import cv2
 import numpy
 import time
+import getpass
 
 def int_to_bytes(x):
 	return x.to_bytes((x.bit_length() + 7) // 8, 'big')
 
-with open('/home/park/catkin_ws/src/white_ticket/scripts/tcp_setting.txt') as f:
+with open('/home/'+getpass.getuser()+'/catkin_ws/src/white_ticket/scripts/tcp_setting.txt') as f:
 	TCP_IP = f.readline()[:-1]
-	TCP_PORT = int(f.readline()[:-1]
+	TCP_PORT = int(f.readline()[:-1])
 #TCP_IP = '192.168.43.192'
 #TCP_PORT = 5004
 BUFSIZE = 1024

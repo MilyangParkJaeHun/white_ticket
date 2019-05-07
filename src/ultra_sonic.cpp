@@ -23,8 +23,8 @@ int main(int argc, char **argv)
 
   while(ros::ok())
   {
-    digitalWrite(TRIG, LOW);
-    usleep(2);
+    //digitalWrite(TRIG, LOW);
+    sleep(1);
     digitalWrite(TRIG, HIGH);
     usleep(20);
 
