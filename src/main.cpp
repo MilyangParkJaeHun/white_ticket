@@ -6,17 +6,17 @@
 #include <vector>
 using namespace std;
 
-const int LIMIT = 5;
-const int ALL = 3;
+const int LIMIT = 3;
+const int ALL = 5;
 const int SAME = 2;
 
 float distance_val = 0;
-string seed;
-string decode;
+string seed="-1";
+string decode="-1";
 vector<string> seeds(ALL, "-1");
 vector<string> decodes(ALL, "-1");
 string seed_now, decode_now;
-int speed_cnt, decode_cnt;
+int seed_cnt, decode_cnt;
 int dp[ALL+1][ALL+1];
 
 void distanceCallback(const white_ticket::Distance::ConstPtr& msg)
@@ -48,15 +48,17 @@ int main(int argc, char **argv)
 
   while(ros::ok())
   {
-    ROS_INFO("distance: %.2fcm", distance_val);
-    ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
+    //ROS_INFO("distance: %.2fcm", distance_val);
+    //ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
 
 		if(seed_now == seed){
 			seed_cnt++;
+			printf("seed1 : %s\n",seed.c_str());
 			if(seed_cnt == LIMIT){
 				for(int i=ALL-1; i>=1; i--)
 					seeds[i] = seeds[i-1];
-				seeds[0] = seed;
+				seeds[0] = seed_now;
+				printf("seed2 : %s\n",seed.c_str());
 			}
 		} else{
 			seed_now = seed;
@@ -82,10 +84,14 @@ int main(int argc, char **argv)
 			printf("%s ", decodes[i].c_str());
 		printf("\n");
 
+		printf("chk %s %s\n", seeds[0].c_str(),decodes[0].c_str());
 		for(int i=1;i<=ALL;i++){
 			for(int j=1;j<=ALL;j++){
-				if(seeds[i-1] != "-1" && decodes[j-1] != "-1" && seeds[i-1]==decodes[j-1])
-					dp[i][j] = dp[i-1][j-1]+1
+				if(seeds[i-1] != "-1" && decodes[j-1] != "-1" && seeds[i-1]==decodes[j-1]){
+					printf("idx : %d %d\n", i, j);
+					printf("%s %s\n", seeds[i-1].c_str(), decodes[j-1].c_str());
+					dp[i][j] = dp[i-1][j-1]+1;
+				}
 				else
 					dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
 			}
