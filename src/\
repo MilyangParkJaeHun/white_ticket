@@ -11,8 +11,6 @@ const int LIMIT = 3;
 const int ALL = 5;
 const int SAME = 2;
 
-const int DISTANCE_THRESHOLD = 10;
-
 float distance_val = 100;
 string seed="-1";
 string decode="-1";
@@ -118,16 +116,11 @@ int main(int argc, char **argv)
 	int in_cnt = 0;
   while(ros::ok())
   {
-    //ROS_INFO("distance: %.2fcm", distance_val)lt target tutorial_generate_messages_py
-[ 10%] B;
+    //ROS_INFO("distance: %.2fcm", distance_val);
     //ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
-		if(distance_val < 5){
-			in_cnt++;
-		}
-		else{
-			printf("please in your phone\n");
-			in_cnt = 0;	
-		}
+		if(distance_val < 5) in_cnt++;
+		else in_cnt = 0;
+		
 		if(in_cnt >= 3){
 			printf("IN\n");
 			clock_t in_time = clock();
@@ -142,44 +135,21 @@ int main(int argc, char **argv)
 					pass_action();
 					if(out_cnt > 4){
 						printf("BYE!\n");
-						pass = false;
-						in_cnt = 0;
-						decodes.assign(ALL,"-1");
 						break;
 					}else{
 						printf("TAKE AWAY PHONE!\n");
 					}
 				}else{
 					int time = clock() - in_time;
-					if(time > 30000){
+					if(time > 1000000 || out_cnt > 3){
 						printf("time : %d\n",time);
-						while(1){
-							if(out_cnt > 4){
-								notpass_action();
-								break;
-							}else{
-								notpass_action();
-								printf("TAKE AWAY PHONE!\n");
-							}
-							if(distance_val >= DISTANCE_THRESHOLD) out_cnt++;
-							else out_cnt = 0;
-							loop_rate.sleep();
-							ros::spinOnce();
-						}
-						decodes.assign(ALL,"-1");
+						notpass_action();
+						pass = false;
+						in_cnt = 0;
 						break;
-					}else{
-						if(out_cnt > 4){
-							printf("your phone is out of range\n");
-							printf("please in your phone\n");	
-							pass = false;
-							in_cnt = 0;
-							decodes.assign(ALL,"-1");
-							break;
-						}
 					}
 				}
-				if(distance_val >= DISTANCE_THRESHOLD) out_cnt++;
+				if(distance_val >= 5) out_cnt++;
 				else out_cnt = 0;
 				loop_rate.sleep();
 				ros::spinOnce();

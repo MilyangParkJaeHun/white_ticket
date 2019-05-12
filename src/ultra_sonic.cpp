@@ -24,7 +24,7 @@ int main(int argc, char **argv)
   while(ros::ok())
   {
     //digitalWrite(TRIG, LOW);
-    sleep(1);
+    usleep(100000);
     digitalWrite(TRIG, HIGH);
     usleep(20);
 
