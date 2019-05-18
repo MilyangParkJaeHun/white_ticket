@@ -22,9 +22,8 @@ string seed_now, decode_now;
 int seed_cnt, decode_cnt;
 int dp[ALL+1][ALL+1];
 
-ros::NodeHandle nh; 
-ros::Publisher pub = nh.advertise<std_msgs::String>("display",100);
-string display_mode="";
+ros::Publisher pub;
+std_msgs::String display_mode;
 
 void distanceCallback(const white_ticket::Distance::ConstPtr& msg)
 {
@@ -102,37 +101,37 @@ bool pass_chk(){
 }
 
 void pass_action(){
-	display_mode = "pass";
+	display_mode.data = "pass";
 	printf("PASS!!!\n");
 	pub.publish(display_mode);
 }
 
 void not_pass_action(){
-	display_mode = "not_pass"
+	display_mode.data = "not_pass";
 	printf("NOT PASS!!!\n");
 	pub.publish(display_mode);
 }
 
 void take_away_action(){
-	display_mode = "take_away"
+	display_mode.data = "take_away";
 	printf("TAKE AWAY PHONE!\n");
 	pub.publish(display_mode);
 }
 
 void not_in_action(){
-	display_mode = "not_in";
+	display_mode.data = "not_in";
 	printf("please in your phone\n");
 	pub.publish(display_mode);
 }
 
 void in_action(){
-	display_mode = "in";
+	display_mode.data = "in";
 	printf("IN\n");
 	pub.publish(display_mode);
 }
 
 void out_of_range_action(){
-	display_mode = "out_of_range";
+	display_mode.data = "out_of_range";
 	printf("your phone is out of range\n");
 	printf("please in your phone\n");	
 	pub.publish(display_mode);
@@ -142,6 +141,8 @@ void out_of_range_action(){
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "main_node");
+	ros::NodeHandle nh;
+	pub = nh.advertise<std_msgs::String>("display",100);
   ros::Subscriber distance_sub = nh.subscribe("distance",20,distanceCallback);
   ros::Subscriber seed_sub = nh.subscribe("seed",20,seedCallback);
   ros::Subscriber decode_sub = nh.subscribe("decode",20,decodeCallback);
@@ -153,7 +154,7 @@ int main(int argc, char **argv)
   {
     //ROS_INFO("distance: %.2fcm", distance_val)lt target tutorial_generate_messages_py
     //ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
-		if(distance_val < 5){
+		if(distance_val < 10){
 			in_cnt++;
 		}
 		else{
@@ -202,7 +203,7 @@ int main(int argc, char **argv)
 						break;
 					}else{
 						if(out_cnt > 4){
-							out_of_range_action()
+							out_of_range_action();
 							pass = false;
 							in_cnt = 0;
 							decodes.assign(ALL,"-1");
