@@ -22,6 +22,10 @@ string seed_now, decode_now;
 int seed_cnt, decode_cnt;
 int dp[ALL+1][ALL+1];
 
+ros::NodeHandle nh; 
+ros::Publisher pub = nh.advertise<std_msgs::String>("display",100);
+string display_mode="";
+
 void distanceCallback(const white_ticket::Distance::ConstPtr& msg)
 {
   distance_val = msg->distance;
@@ -98,17 +102,46 @@ bool pass_chk(){
 }
 
 void pass_action(){
+	display_mode = "pass";
 	printf("PASS!!!\n");
+	pub.publish(display_mode);
 }
 
-void notpass_action(){
+void not_pass_action(){
+	display_mode = "not_pass"
 	printf("NOT PASS!!!\n");
+	pub.publish(display_mode);
 }
+
+void take_away_action(){
+	display_mode = "take_away"
+	printf("TAKE AWAY PHONE!\n");
+	pub.publish(display_mode);
+}
+
+void not_in_action(){
+	display_mode = "not_in";
+	printf("please in your phone\n");
+	pub.publish(display_mode);
+}
+
+void in_action(){
+	display_mode = "in";
+	printf("IN\n");
+	pub.publish(display_mode);
+}
+
+void out_of_range_action(){
+	display_mode = "out_of_range";
+	printf("your phone is out of range\n");
+	printf("please in your phone\n");	
+	pub.publish(display_mode);
+}
+
 	
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "main_node");
-  ros::NodeHandle nh; 
   ros::Subscriber distance_sub = nh.subscribe("distance",20,distanceCallback);
   ros::Subscriber seed_sub = nh.subscribe("seed",20,seedCallback);
   ros::Subscriber decode_sub = nh.subscribe("decode",20,decodeCallback);
@@ -119,17 +152,16 @@ int main(int argc, char **argv)
   while(ros::ok())
   {
     //ROS_INFO("distance: %.2fcm", distance_val)lt target tutorial_generate_messages_py
-[ 10%] B;
     //ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
 		if(distance_val < 5){
 			in_cnt++;
 		}
 		else{
-			printf("please in your phone\n");
+			not_in_action();
 			in_cnt = 0;	
 		}
 		if(in_cnt >= 3){
-			printf("IN\n");
+			in_action();
 			clock_t in_time = clock();
 			int out_cnt = 0;
 			while(1){
@@ -147,7 +179,7 @@ int main(int argc, char **argv)
 						decodes.assign(ALL,"-1");
 						break;
 					}else{
-						printf("TAKE AWAY PHONE!\n");
+						take_away_action();
 					}
 				}else{
 					int time = clock() - in_time;
@@ -155,11 +187,11 @@ int main(int argc, char **argv)
 						printf("time : %d\n",time);
 						while(1){
 							if(out_cnt > 4){
-								notpass_action();
+								not_pass_action();
 								break;
 							}else{
-								notpass_action();
-								printf("TAKE AWAY PHONE!\n");
+								not_pass_action();
+								take_away_action();
 							}
 							if(distance_val >= DISTANCE_THRESHOLD) out_cnt++;
 							else out_cnt = 0;
@@ -170,8 +202,7 @@ int main(int argc, char **argv)
 						break;
 					}else{
 						if(out_cnt > 4){
-							printf("your phone is out of range\n");
-							printf("please in your phone\n");	
+							out_of_range_action()
 							pass = false;
 							in_cnt = 0;
 							decodes.assign(ALL,"-1");
