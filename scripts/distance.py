@@ -5,6 +5,7 @@ import time
 import sys
 import signal
 from std_msgs.msg import Float32
+from std_msgs.msg import String
 
 TRIG = 24
 ECHO = 23
@@ -31,6 +32,7 @@ def print_distance(distance):
 
 def main():
 	rospy.init_node('distance_node', anonymous=True)
+	#pub = rospy.Publisher('distance', Float32, queue_size=10)
 	pub = rospy.Publisher('distance', Float32, queue_size=10)
 	GPIO.setmode(GPIO.BCM)
 	
@@ -73,7 +75,7 @@ def main():
 		distance = round(distance, 2)
 		
 		print_distance(distance)
-		pub.pulish(distance)
+		pub.publish(Float32(distance))
 	GPIO.cleanup()
 
 if __name__ == '__main__':
