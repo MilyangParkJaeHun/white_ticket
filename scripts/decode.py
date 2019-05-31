@@ -47,12 +47,12 @@ def decode():
       if(decoded!=None and len(decoded)!=0):
         for d in decoded:
           decode_data = d.data.decode("utf-8")
+          print("data :",decode_data)
           decode_data = decode_data.split('}')[0]
           barcode_data = decode_data.split('=')[1]
           #if(len(barcode_data)<2):
           # pub.publish('-1')
           # break
-          print("data :",barcode_data)
           pub.publish(barcode_data)
           arr.append(barcode_data)
           break
