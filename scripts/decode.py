@@ -32,7 +32,6 @@ def decode():
   s.listen(True)
 
   conn, addr = s.accept()
-  arr = []
   while True:
     len_length = int.from_bytes(conn.recv(1),byteorder='big')
     print("len_length : ", len_length)
@@ -48,19 +47,20 @@ def decode():
         for d in decoded:
           decode_data = d.data.decode("utf-8")
           print("data :",decode_data)
-          decode_data = decode_data.split('}')[0]
-          barcode_data = decode_data.split('=')[1]
+					decode_data = decode_data.split(',')
+					number = decode_data[0]
+          number = number.split('}')[0]
+          number = number.split('=')[1]
+					send_data = number+','+decode_data[1]+','+decode_data[2]+','+decode_data[3]
           #if(len(barcode_data)<2):
           # pub.publish('-1')
           # break
-          pub.publish(barcode_data)
-          arr.append(barcode_data)
+          pub.publish(send_data)
           break
       else:
           pub.publish('-1')
       cv2.imshow('SERVER',gray)
       if(cv2.waitKey(1) & 0xFF == ord('q')):
-        print(arr)
         break
     else:
       print(gray)
