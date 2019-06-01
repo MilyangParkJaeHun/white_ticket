@@ -9,7 +9,7 @@ from PIL import ImageFont
 from PIL import ImageDraw
 
 display_mode = 0
-picture_name = "wait0.jpg"
+picture_name = "/home/park/catkin_ws/src/white_ticket/scripts/images/wait0.jpg"
 img_path = '/home/park/catkin_ws/src/white_ticket/scripts/images/'
 qr_cnt = 0
 ticket_id = 0

@@ -13,7 +13,7 @@ const int LIMIT = 3;
 const int ALL = 5;
 const int SAME = 2;
 
-const int DISTANCE_THRESHOLD = 10;
+const int DISTANCE_THRESHOLD = 5;
 
 float distance_val = 100;
 string seed="-1";
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
 					}
 				}else{
 					int time = clock() - in_time;
-					if(time > 500000){
+					if(time > 100000){
 						printf("time : %d\n",time);
 						while(1){
 							if(out_cnt > 4){
@@ -217,7 +217,9 @@ int main(int argc, char **argv)
 							pass = false;
 							in_cnt = 0;
 							decodes.assign(ALL,"-1");
-							break;
+							//break;
+						}else{
+							in_action();
 						}
 					}
 				}
