@@ -40,10 +40,8 @@ def decode():
     stringData = recvall(conn, length)
     data = numpy.fromstring(stringData, dtype='uint8')
     gray=cv2.imdecode(data,0)
-    print(type(gray))
     if(str(type(gray))!="<class 'NoneType'>"):
       decoded = pyzbar.decode(gray)
-      print(len(decoded))
       if(decoded!=None and len(decoded)!=0):
         for d in decoded:
           decode_data = d.data.decode("utf-8")
@@ -53,8 +51,8 @@ def decode():
           seed = seed.split('}')[0]
           seed = seed.split('=')[1]
           ticket_info = decode_data[2].split(' ')
-          row = ticket_info[0].split('열')[0]
-          number = ticket_info[0].split('번')[0]
+          row = ticket_info[0][:-1]
+          number = ticket_info[1][:-1]
           send_data = seed+','+decode_data[1]+','+row+','+number+','+decode_data[3]
           #if(len(barcode_data)<2):
           # pub.publish('-1')
