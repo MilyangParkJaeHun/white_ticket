@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Float32.h>
 #include "white_ticket/Distance.h"
 #include <stdio.h>
 #include <string>
@@ -26,9 +27,9 @@ int dp[ALL+1][ALL+1];
 ros::Publisher pub;
 std_msgs::Int16 display_mode;
 
-void distanceCallback(const white_ticket::Distance::ConstPtr& msg)
+void distanceCallback(const std_msgs::Float32::ConstPtr& msg)
 {
-  distance_val = msg->distance;
+  distance_val = msg->data;
   return;
 }
 
@@ -162,6 +163,7 @@ int main(int argc, char **argv)
   {
     //ROS_INFO("distance: %.2fcm", distance_val)lt target tutorial_generate_messages_py
     //ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
+		printf("in_cnt : %d  distance : %f \n", in_cnt, distance_val);
 		if(distance_val < 10){
 			in_cnt++;
 		}
@@ -192,7 +194,7 @@ int main(int argc, char **argv)
 					}
 				}else{
 					int time = clock() - in_time;
-					if(time > 30000){
+					if(time > 500000){
 						printf("time : %d\n",time);
 						while(1){
 							if(out_cnt > 4){
