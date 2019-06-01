@@ -4,7 +4,9 @@ import cv2
 import sys
 from std_msgs.msg import Int16
 from std_msgs.msg import String
-from 
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
 
 display_mode = 0
 picture_name = "00.jpg"
@@ -14,9 +16,16 @@ ticket_id = 0
 before_mode = -1
 ticket_row = 0
 ticket_number = 0
+phone_number = ""
 
 def make_img():
-	
+	img = Imgae.open(img_path+"TL.jpeg")
+	draw = ImageDraw.Draw(img)
+	font = ImageFont.truetype("FreeSansBold.ttf",25)
+	draw.text((349, 413),phone_number,(255,255,255), font=font)
+	draw.text((603, 413),seat_row,(255,255,25), font=font)
+	draw.text((650, 413),seat_num,(255,255,25), font=font)
+	img.save(img_path+"accept.jpg")
 	
 
 def ticket_callback(data):
@@ -37,7 +46,7 @@ def display_callback(data):
 	elif(display_mode == 3):
 		picture_name = img_path+"qr/"+str(qr_cnt)+".jpg"
 		qr_cnt = (qr_cnt + 1) % 22
-	elif(display_mode == 4:
+	elif(display_mode == 4):
 		picture_name = img_path+'wait'+str(ticket_id)+'.jpg'
 	before_mode = display_mode
 
@@ -46,6 +55,7 @@ def decode_callback(data):
 	decode = decode.split(',')
 	ticket_row = decode[2]
 	ticket_number = decode[3]
+	phone_number = decode[4]
 
 def main():
 	global display_mode
