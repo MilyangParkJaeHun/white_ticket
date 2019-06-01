@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#-*-coding:utf-8-*-
 import socket
 import rospy
 import cv2
@@ -48,10 +49,13 @@ def decode():
           decode_data = d.data.decode("utf-8")
           print("data :",decode_data)
           decode_data = decode_data.split(',')
-          number = decode_data[0]
-          number = number.split('}')[0]
-          number = number.split('=')[1]
-          send_data = number+','+decode_data[1]+','+decode_data[2]+','+decode_data[3]
+          seed = decode_data[0]
+          seed = seed.split('}')[0]
+          seed = seed.split('=')[1]
+          ticket_info = decode_data[2].split(' ')
+          row = ticket_info[0].split('열')[0]
+          number = ticket_info[0].split('번')[0]
+          send_data = seed+','+decode_data[1]+','+row+','+number+','+decode_data[3]
           #if(len(barcode_data)<2):
           # pub.publish('-1')
           # break
