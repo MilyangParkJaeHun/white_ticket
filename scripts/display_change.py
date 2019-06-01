@@ -3,18 +3,57 @@ import rospy
 import cv2
 import sys
 from std_msgs.msg import Int16
+from std_msgs.msg import String
+from 
 
 display_mode = 0
+picture_name = "00.jpg"
+img_path = '/home/park/catkin_ws/src/white_ticket/scripts/images/'
+qr_cnt = 0
+ticket_id = 0
+before_mode = -1
+ticket_row = 0
+ticket_number = 0
+
+def make_img():
+	
+	
+
+def ticket_callback(data):
+	ticket_id = data.data
 
 def display_callback(data):
-	global display_mode
 	display_mode = data.data
+	if(display_mode != 3):
+		qr_cnt = 0
+	if(display_mode == 0):
+		if(before_mode != 0):
+			make_img()
+		picture_name = img_path+"accept.jpg"
+	elif(display_mode == 1):
+		picture_name = img_path+"fail.jpg"
+	elif(display_mode == 2):
+		picture_name = img_path+"disconnect.jpg"
+	elif(display_mode == 3):
+		picture_name = img_path+"qr/"+str(qr_cnt)+".jpg"
+		qr_cnt = (qr_cnt + 1) % 22
+	elif(display_mode == 4:
+		picture_name = img_path+'wait'+str(ticket_id)+'.jpg'
+	before_mode = display_mode
+
+def decode_callback(data):
+	decode = data.data
+	decode = decode.split(',')
+	ticket_row = decode[2]
+	ticket_number = decode[3]
 
 def main():
 	global display_mode
 	rospy.init_node('display_node', anonymous=True)
 	r = rospy.Rate(10)
-	sub = rospy.Subscriber('display', Int16, display_callback)
+	display_sub = rospy.Subscriber('display', Int16, display_callback)
+	ticket_sub = rospy.Subscriber('ticket', String, ticket_callback)
+	decode_sub = rospy.Subscriber('decode', String, decode_callback)
 	w,h = 640, 480
 	while True:
 		filename = '/home/park/catkin_ws/src/white_ticket/scripts/images/'+str(display_mode)+'.jpg'
