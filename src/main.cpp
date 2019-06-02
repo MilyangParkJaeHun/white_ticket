@@ -164,7 +164,7 @@ int main(int argc, char **argv)
     //ROS_INFO("distance: %.2fcm", distance_val)lt target tutorial_generate_messages_py
     //ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
 		printf("in_cnt : %d  distance : %f \n", in_cnt, distance_val);
-		if(distance_val < 10){
+		if(distance_val < DISTANCE_THRESHOLD){
 			in_cnt++;
 		}
 		else{
@@ -176,6 +176,7 @@ int main(int argc, char **argv)
 			clock_t in_time = clock();
 			int out_cnt = 0;
 			while(1){
+				printf("in_cnt : %d  distance : %f \n", in_cnt, distance_val);
 				seed_chk();
 				decode_chk();
 				buf_print();
