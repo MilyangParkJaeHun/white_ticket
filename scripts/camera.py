@@ -20,6 +20,8 @@ sock = socket.socket()
 sock.connect((TCP_IP, TCP_PORT))
 
 capture = cv2.VideoCapture(0)
+capture.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+capture.set(cv2.CAP_PROP_FOCUS, 40)
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 while True:

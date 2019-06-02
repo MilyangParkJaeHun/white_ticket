@@ -210,7 +210,7 @@ int main(int argc, char **argv)
 					if(time > 150000){
 						printf("time : %d\n",time);
 						while(1){
-							if(out_cnt > 4){
+							if(out_cnt > 5){
 								not_pass_action();
 								break;
 							}else{
@@ -225,7 +225,7 @@ int main(int argc, char **argv)
 						decodes.assign(ALL,"-1");
 						break;
 					}else{
-						if(out_cnt > 4){
+						if(out_cnt > 5){
 							out_of_range_action();
 							pass = false;
 							in_cnt = 0;
