@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include <iostream>
 using namespace std;
 
 const int LIMIT = 3;
@@ -16,6 +17,8 @@ const int SAME = 2;
 const int DISTANCE_THRESHOLD = 5;
 
 float distance_val = 100;
+string ticket_id = "0";
+string decode_ticket = "0";
 string seed="-1";
 string decode="-1";
 vector<string> seeds(ALL, "-1");
@@ -49,7 +52,13 @@ void decodeCallback(const std_msgs::String::ConstPtr& msg)
 		idx++;
 	}
 	decode = tmp;
+	decode_ticket = content[idx+1];
   return;
+}
+
+void ticketCallback(const std_msgs::String::ConstPtr& msg)
+{
+	ticket_id = msg->data;
 }
 
 void seed_chk(){
@@ -103,6 +112,8 @@ void count(){
 }
 
 bool pass_chk(){
+	if((decode != "-1") && (decode_ticket != ticket_id))
+		return false;
 	if(dp[ALL][ALL] >= SAME)
 		return true;
 	else
@@ -155,6 +166,7 @@ int main(int argc, char **argv)
   ros::Subscriber distance_sub = nh.subscribe("distance",20,distanceCallback);
   ros::Subscriber seed_sub = nh.subscribe("seed",20,seedCallback);
   ros::Subscriber decode_sub = nh.subscribe("decode",20,decodeCallback);
+	ros::Subscriber ticket_sub = nh.subscribe("ticket",20,ticketCallback);
   ros::Rate loop_rate(10);
 
 	bool pass = false;
@@ -163,7 +175,7 @@ int main(int argc, char **argv)
   {
     //ROS_INFO("distance: %.2fcm", distance_val)lt target tutorial_generate_messages_py
     //ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
-		printf("in_cnt : %d  distance : %f \n", in_cnt, distance_val);
+		//printf("in_cnt : %d  distance : %f \n", in_cnt, distance_val);
 		if(distance_val < DISTANCE_THRESHOLD){
 			in_cnt++;
 		}
@@ -171,12 +183,12 @@ int main(int argc, char **argv)
 			not_in_action();
 			in_cnt = 0;	
 		}
-		if(in_cnt >= 3){
+		if(in_cnt >= 5){
 			in_action();
 			clock_t in_time = clock();
 			int out_cnt = 0;
 			while(1){
-				printf("in_cnt : %d  distance : %f \n", in_cnt, distance_val);
+				//printf("in_cnt : %d  distance : %f \n", in_cnt, distance_val);
 				seed_chk();
 				decode_chk();
 				buf_print();
@@ -195,7 +207,7 @@ int main(int argc, char **argv)
 					}
 				}else{
 					int time = clock() - in_time;
-					if(time > 100000){
+					if(time > 150000){
 						printf("time : %d\n",time);
 						while(1){
 							if(out_cnt > 4){
@@ -218,6 +230,7 @@ int main(int argc, char **argv)
 							pass = false;
 							in_cnt = 0;
 							decodes.assign(ALL,"-1");
+							in_time = clock();
 							//break;
 						}else{
 							in_action();

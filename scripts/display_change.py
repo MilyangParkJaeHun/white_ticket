@@ -70,7 +70,9 @@ def main():
 	display_sub = rospy.Subscriber('display', Int16, display_callback)
 	ticket_sub = rospy.Subscriber('ticket', String, ticket_callback)
 	decode_sub = rospy.Subscriber('decode', String, decode_callback)
-	w,h = 640, 480
+	w,h = 750, 560
+	cv2.namedWindow("window", cv2.WND_PROP_FULLSCREEN)
+	cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 	while True:
 		if(display_mode == 3):
 			qr_cnt = (qr_cnt + 1) % 22
@@ -78,7 +80,7 @@ def main():
 			qr_cnt = 0
 		img = cv2.imread(picture_name,cv2.IMREAD_COLOR)
 		img = cv2.resize(img, (w,h), interpolation=cv2.INTER_CUBIC)
-		cv2.imshow('img',img)
+		cv2.imshow('window',img)
 		key = cv2.waitKey(1)
 		if key == 27:
 			break
