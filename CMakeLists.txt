@@ -39,7 +39,7 @@ add_dependencies(main_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED
 target_link_libraries(main_node ${catkin_LIBRARIES})
 
 install(PROGRAMS
-	scripts/firebase_seed.js
+	scripts/nonce.js
 	DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -6,13 +6,13 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
-#include <ctime>
+#include <time.h>
 #include <iostream>
 using namespace std;
 
 const int LIMIT = 3;
-const int ALL = 5;
-const int SAME = 2;
+const int ALL = 6;
+const int SAME = 3;
 
 const int DISTANCE_THRESHOLD = 5;
 
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
   while(ros::ok())
   {
     //ROS_INFO("distance: %.2fcm", distance_val)lt target tutorial_generate_messages_py
-    //ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
+    ROS_INFO("seed %s  /   decode %s",seed.c_str(), decode.c_str());
 		//printf("in_cnt : %d  distance : %f \n", in_cnt, distance_val);
 		if(distance_val < DISTANCE_THRESHOLD){
 			in_cnt++;
@@ -196,7 +196,7 @@ int main(int argc, char **argv)
 				if(!pass) pass = pass_chk();
 				if(pass){
 					pass_action();
-					if(out_cnt > 4){
+					if(out_cnt > 5){
 						printf("BYE!\n");
 						pass = false;
 						in_cnt = 0;
@@ -206,8 +206,9 @@ int main(int argc, char **argv)
 						take_away_action();
 					}
 				}else{
-					int time = clock() - in_time;
-					if(time > 150000){
+					double time = clock() - in_time;
+					printf("time : %lf in_time : %lf\n",time,in_time);
+					if(time > 100000){
 						printf("time : %d\n",time);
 						while(1){
 							if(out_cnt > 5){

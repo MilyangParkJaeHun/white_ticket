@@ -22,10 +22,13 @@ def make_img():
 	global phone_number, ticket_row, ticket_number
 	img = Image.open(img_path+"TL.jpeg")
 	draw = ImageDraw.Draw(img)
-	font = ImageFont.truetype("FreeSansBold.ttf",25)
-	draw.text((349, 413),phone_number,(255,255,255), font=font)
-	draw.text((603, 413),ticket_row,(255,255,25), font=font)
-	draw.text((650, 413),ticket_number,(255,255,25), font=font)
+	font = ImageFont.truetype("FreeSansBold.ttf",45)
+	draw.text((310, 406),phone_number,(255,255,255), font=font)
+	draw.text((588, 404),ticket_row,(255,255,25), font=font)
+	if len(ticket_number) == 1 :
+		draw.text((690, 404),ticket_number,(255,255,25), font=font)
+	else :
+ 		draw.text((667, 402),ticket_number,(255,255,25), font=font)
 	img.save(img_path+"accept.jpg")
 	
 
